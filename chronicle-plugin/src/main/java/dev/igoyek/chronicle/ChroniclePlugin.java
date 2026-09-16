@@ -6,6 +6,7 @@ import com.eternalcode.multification.notice.Notice;
 import com.google.common.base.Stopwatch;
 import dev.igoyek.chronicle.configuration.ConfigurationService;
 import dev.igoyek.chronicle.configuration.PluginConfig;
+import dev.igoyek.chronicle.database.DatabaseManager;
 import dev.igoyek.chronicle.handler.InvalidUsageHandlerImpl;
 import dev.igoyek.chronicle.handler.MissingPermissionHandlerImpl;
 import dev.igoyek.chronicle.notification.NoticeService;
@@ -23,22 +24,30 @@ import java.io.File;
 
 public class ChroniclePlugin extends JavaPlugin implements ChronicleApi {
 
-    private static final String FALLBACK_PREFIX = "ilogblock";
+    private static final String COMMAND_FALLBACK_PREFIX = "chronicle";
     private static final int BSTATS_METRICS_ID = 0;
 
     private LiteCommands<CommandSender> liteCommands;
+    private DatabaseManager databaseManager;
     private boolean apiInitialized;
 
     @Override
     public void onEnable() {
-        Stopwatch started = Stopwatch.createStarted();
+        Stopwatch startupTimer = Stopwatch.createStarted();
         Server server = this.getServer();
-
         File dataFolder = this.getDataFolder();
 
         ConfigurationService configurationService = new ConfigurationService();
-
         PluginConfig pluginConfig = configurationService.create(PluginConfig.class, new File(dataFolder, "configuration.yml"));
+
+        this.databaseManager = new DatabaseManager(this.getLogger(), dataFolder, pluginConfig.database);
+        try {
+            this.databaseManager.connect();
+        } catch (Exception exception) {
+            this.getLogger().severe("Could not initialize the database, disabling plugin: " + exception.getMessage());
+            server.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         UpdaterService updaterService = new UpdaterService(this.getDescription());
 
@@ -49,7 +58,7 @@ public class ChroniclePlugin extends JavaPlugin implements ChronicleApi {
 
         NoticeService noticeService = new NoticeService(pluginConfig, miniMessage);
 
-        this.liteCommands = LiteBukkitFactory.builder(FALLBACK_PREFIX, this, server)
+        this.liteCommands = LiteBukkitFactory.builder(COMMAND_FALLBACK_PREFIX, this, server)
                 .message(LiteBukkitMessages.PLAYER_NOT_FOUND, pluginConfig.messages.playerNotFound)
                 .message(LiteBukkitMessages.PLAYER_ONLY, pluginConfig.messages.playerOnly)
 
@@ -67,10 +76,12 @@ public class ChroniclePlugin extends JavaPlugin implements ChronicleApi {
 
                 .build();
 
+        ChronicleProvider.initialize(this);
+        this.apiInitialized = true;
+
         new Metrics(this, BSTATS_METRICS_ID);
 
-        long millis = started.elapsed().toMillis();
-        this.getLogger().info("iLogBlock plugin enabled in " + millis + "ms!");
+        this.getLogger().info("Chronicle enabled in " + startupTimer.elapsed().toMillis() + "ms.");
     }
 
     @Override
@@ -82,6 +93,10 @@ public class ChroniclePlugin extends JavaPlugin implements ChronicleApi {
         if (this.apiInitialized) {
             ChronicleProvider.deinitialize();
             this.apiInitialized = false;
+        }
+
+        if (this.databaseManager != null) {
+            this.databaseManager.close();
         }
     }
 }

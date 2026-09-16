@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class UpdaterService {
 
-    public static final String MODRINTH_PROJECT_ID = "iLogBlock";
+    public static final String MODRINTH_PROJECT_ID = "Chronicle";
     public static final String CACHE_KEY = "modrinth-update";
 
     private final AsyncLoadingCache<String, UpdateResult> updateCache;

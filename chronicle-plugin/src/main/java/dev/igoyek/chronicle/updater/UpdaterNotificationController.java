@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class UpdaterNotificationController {
 
-    public static final String NEW_VERSION_AVAILABLE = "New version of iLogBlock is available! Check the plugin page for more information.";
+    public static final String NEW_VERSION_AVAILABLE = "New version of Chronicle is available! Check the plugin page for more information.";
 
     private final UpdaterService updaterService;
     private final PluginConfig pluginConfig;
@@ -39,6 +39,6 @@ public class UpdaterNotificationController {
     }
 
     private boolean shouldNotify(Player player) {
-        return player.hasPermission("ilogblock.receiveupdates") && this.pluginConfig.settings.notifyAboutUpdates;
+        return player.hasPermission("chronicle.receiveupdates") && this.pluginConfig.settings.notifyAboutUpdates;
     }
 }

@@ -26,7 +26,7 @@ public class InvalidUsageHandlerImpl implements InvalidUsageHandler<CommandSende
         for (String usage : schematic.all()) {
             this.noticeService.create()
                     .viewer(invocation.sender())
-                    .notice(this.pluginConfig.messages.invlidCommandUsage)
+                    .notice(this.pluginConfig.messages.invalidCommandUsage)
                     .placeholder("{USAGE}", usage)
                     .send();
         }

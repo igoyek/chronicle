@@ -27,8 +27,11 @@ dependencies {
     implementation("com.eternalcode:eternalcode-commons-adventure:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-bukkit:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-shared:${Versions.ETERNALCODE_COMMONS}")
-    implementation("com.eternalcode:eternalcode-commons-folia:${Versions.ETERNALCODE_COMMONS}")
     implementation("com.eternalcode:eternalcode-commons-updater:${Versions.ETERNALCODE_COMMONS}")
+
+    library("org.mariadb.jdbc:mariadb-java-client:${Versions.MARIA_DB}")
+    library("org.postgresql:postgresql:${Versions.POSTGRESQL}")
+    library("com.zaxxer:HikariCP:${Versions.HIKARI_CP}")
 
     compileOnly("me.clip:placeholderapi:${Versions.PLACEHOLDER_API}")
 
@@ -67,7 +70,7 @@ tasks {
 }
 
 tasks.shadowJar {
-    archiveFileName.set("iLogBlock v${project.version}.jar")
+    archiveFileName.set("Chronicle v${project.version}.jar")
 
     exclude(
         "org/intellij/lang/annotations/**",
@@ -81,14 +84,12 @@ tasks.shadowJar {
         "com/google/gson/**"
     )
 
-    val prefix = "dev.igoyek.logblock.libs"
+    val prefix = "dev.igoyek.chronicle.libs"
     listOf(
         "eu.okaeri",
         "org.bstats",
         "org.yaml",
         "dev.rollczi.litecommands",
-        "com.eternalcode.gitcheck",
-        "org.json.simple",
         "com.github.benmanes.caffeine",
         "com.eternalcode.commons",
         "com.eternalcode.multification",

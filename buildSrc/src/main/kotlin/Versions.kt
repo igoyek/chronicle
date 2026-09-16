@@ -11,6 +11,12 @@ object Versions {
     const val OKAERI_CONFIGS_SERDES_COMMONS = "5.0.13"
     const val OKAERI_CONFIGS_SERDES_BUKKIT = "5.0.13"
 
+    const val MARIA_DB = "3.5.10"
+    const val POSTGRESQL = "42.7.13"
+    const val H2 = "2.5.250"
+    const val ORMLITE = "6.1"
+    const val HIKARI_CP = "7.1.0"
+
     const val CAFFEINE = "3.2.4"
 
     const val B_STATS_BUKKIT = "3.2.1"
