@@ -1,3 +1,3 @@
-rootProject.name = "logblock"
-include("logblock-api")
-include("logblock-plugin")
+rootProject.name = "chronicle"
+include("chronicle-api")
+include("chronicle-plugin")
